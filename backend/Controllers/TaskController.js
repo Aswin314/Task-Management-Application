@@ -2,11 +2,12 @@ import mongoose from "mongoose";
 import Task from "../models/TaskModels.js";
 
 export const CreateTask = async (req, res) => {
-  const { title, status } = req.body;
+  const { title, status, deadline } = req.body;
   const task = new Task({
     title: req.body.title,
     status: req.body.status,
     user: req.user.id,
+    deadline: req.body.deadline,
   });
   await task.save();
   res.json("Task Created");

@@ -13,7 +13,9 @@ const taskSchema = new mongoose.Schema(
       type: String,
       default: "pending",
     },
-
+    deadline: {
+      type: Date,
+    },
     user: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",

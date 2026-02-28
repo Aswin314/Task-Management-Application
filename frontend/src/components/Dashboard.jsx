@@ -2,16 +2,22 @@ import React, { useEffect, useState } from "react";
 import instance from "../api/axios";
 import { toast } from "react-toastify";
 import { handleError } from "../utils/ErrorHandler";
-import axios from "axios";
 import { Link } from "react-router-dom";
 import { useContext } from "react";
 import { AuthContext } from "../context/AuthContext";
+import { getTaskPriority } from "../Ai/priorityai.js";
+import Deadline2 from "../Ai/Deadline.js";
+import { productivityScore } from "../Ai/Productivity.js";
+import { getPriority } from "../Ai/getpriority.js";
+import { getSuggestion } from "../Ai/Suggestionai.js";
 
 const Dashboard = () => {
   const [tasks, setTasks] = useState([]);
   const [title, setTitle] = useState("");
   const [status, setStatus] = useState("pending");
   const [loading, setLoading] = useState(false);
+  const [Score, setScore] = useState(0);
+  const [suggestion, setSuggestion] = useState("");
   const { logout } = useContext(AuthContext);
 
   const getTasks = async () => {
@@ -26,6 +32,8 @@ const Dashboard = () => {
       });
 
       setTasks(res.data);
+      setScore(productivityScore(res.data));
+      setSuggestion(getSuggestion(res.data, productivityScore(res.data)));
       toast.success("Tasks fetched successfully");
     } catch (err) {
       toast.error(handleError(err));
@@ -36,9 +44,12 @@ const Dashboard = () => {
   const addTask = async () => {
     setLoading(true);
     try {
+      const aiPriority = await getTaskPriority(title);
+      const Deadline = await Deadline2(title);
       await instance.post("/tasks/add", {
         title,
-        status,
+        status: aiPriority,
+        deadline: Deadline,
       });
       getTasks();
       setTitle("");
@@ -204,6 +215,9 @@ const Dashboard = () => {
               }}
             >
               <div>
+                <h2>Productivity Score: {Score}%</h2>
+                <p>Priority: {getPriority(task.deadline, task.title)}</p>
+                <p>{suggestion}</p>
                 <p>
                   <strong>{task.title}</strong>
                 </p>
@@ -219,7 +233,7 @@ const Dashboard = () => {
                   <option value="pending">Pending</option>
                   <option value="completed">Completed</option>
                 </select>
-
+                <p>Deadline: {task.deadline?.split("T")[0]}</p>
                 <button
                   onClick={() => deleteTask(task._id)}
                   style={{
