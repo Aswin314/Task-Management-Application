@@ -50,39 +50,81 @@ export default function Login() {
       navigate("/user", { replace: true });
     }
     setLoading(false);
-
-    // ROLE BASED NAVIGATION (DAY 13)
-    // if (form.role === "admin") {
-    //   navigate("/admin", { replace: true });
-    // } else {
-    //   navigate("/user", { replace: true });
-    // }
-
-    // const expiryTime = Date.now() + 60000;
-    // Login(res.data.token, form.role);
-    // localStorage.setItem("expiryTime", expiryTime);
-    // localStorage.setItem("refreshToken", refreshToken);
+  };
+  const inputStyle = {
+    padding: "10px",
+    marginBottom: "15px",
+    borderRadius: "6px",
+    border: "1px solid #ccc",
+    fontSize: "14px",
   };
   return (
-    <form onSubmit={handleSubmit}>
-      <h2>Login</h2>
+    <div
+      style={{
+        height: "100vh",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        background: "linear-gradient(to right, #667eea, #764ba2)",
+        fontFamily: "Arial, sans-serif",
+      }}
+    >
+      <form
+        onSubmit={handleSubmit}
+        style={{
+          background: "#fff",
+          padding: "40px",
+          borderRadius: "12px",
+          width: "350px",
+          boxShadow: "0 10px 25px rgba(0,0,0,0.2)",
+          display: "flex",
+          flexDirection: "column",
+        }}
+      >
+        <h2 style={{ textAlign: "center", marginBottom: "25px" }}>Login</h2>
 
-      <input name="email" placeholder="Email" onChange={handleChange} />
+        <input
+          name="email"
+          placeholder="Email"
+          onChange={handleChange}
+          style={inputStyle}
+        />
 
-      <input
-        name="password"
-        type="password"
-        placeholder="Password"
-        onChange={handleChange}
-      />
+        <input
+          name="password"
+          type="password"
+          placeholder="Password"
+          onChange={handleChange}
+          style={inputStyle}
+        />
 
-      <select name="role" onChange={handleChange}>
-        <option value="">Select Role</option>
-        <option value="admin">Admin</option>
-        <option value="user">User</option>
-      </select>
+        <select name="role" onChange={handleChange} style={inputStyle}>
+          <option value="">Select Role</option>
+          <option value="admin">Admin</option>
+          <option value="user">User</option>
+        </select>
 
-      {Loading ? <Loader /> : <button type="submit">Login</button>}
-    </form>
+        {Loading ? (
+          <Loader />
+        ) : (
+          <button
+            type="submit"
+            style={{
+              padding: "12px",
+              marginTop: "10px",
+              background: "#667eea",
+              color: "#fff",
+              border: "none",
+              borderRadius: "6px",
+              fontWeight: "bold",
+              cursor: "pointer",
+              transition: "0.3s",
+            }}
+          >
+            Login
+          </button>
+        )}
+      </form>
+    </div>
   );
 }

@@ -3,12 +3,16 @@ import instance from "../api/axios";
 import { toast } from "react-toastify";
 import { handleError } from "../utils/ErrorHandler";
 import axios from "axios";
+import { Link } from "react-router-dom";
+import { useContext } from "react";
+import { AuthContext } from "../context/AuthContext";
 
 const Dashboard = () => {
   const [tasks, setTasks] = useState([]);
   const [title, setTitle] = useState("");
   const [status, setStatus] = useState("pending");
   const [loading, setLoading] = useState(false);
+  const { logout } = useContext(AuthContext);
 
   const getTasks = async () => {
     setLoading(true);
@@ -41,7 +45,6 @@ const Dashboard = () => {
       toast.success("Task added successfully");
     } catch (err) {
       toast.error(handleError(err));
-
     }
     setLoading(false);
   };
@@ -63,7 +66,6 @@ const Dashboard = () => {
       toast.success("Task updated successfully");
     } catch (err) {
       toast.error(handleError(err));
-  
     }
   };
   const deleteTask = async (id) => {
@@ -87,30 +89,105 @@ const Dashboard = () => {
   };
   return (
     <>
-      <div>
-        <h3>Add Task</h3>
+      <div
+        style={{
+          maxWidth: "600px",
+          margin: "40px auto",
+          padding: "20px",
+          border: "1px solid #ddd",
+          borderRadius: "10px",
+          boxShadow: "0 0 10px rgba(0,0,0,0.1)",
+          fontFamily: "Arial",
+        }}
+      >
+        <h2 style={{ textAlign: "center" }}>Task Manager</h2>
 
-        <input
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-          placeholder="Task Title"
-        />
+        {/* Add Task Section */}
+        <div style={{ marginBottom: "20px" }}>
+          <h3>Add Task</h3>
 
-        <select value={status} onChange={(e) => setStatus(e.target.value)}>
-          <option value="pending">Pending</option>
-          <option value="completed">Completed</option>
-        </select>
+          <input
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            placeholder="Task Title"
+            style={{
+              width: "100%",
+              padding: "8px",
+              marginBottom: "10px",
+              borderRadius: "5px",
+              border: "1px solid #ccc",
+            }}
+          />
 
-        <button disabled={loading} onClick={addTask}>
-          Add Task
-        </button>
-        <button onClick={getTasks}>Get Tasks</button>
+          <select
+            value={status}
+            onChange={(e) => setStatus(e.target.value)}
+            style={{
+              width: "100%",
+              padding: "8px",
+              marginBottom: "10px",
+              borderRadius: "5px",
+            }}
+          >
+            <option value="pending">Pending</option>
+            <option value="completed">Completed</option>
+          </select>
 
-        <h2>My Tasks</h2>
-        {loading && <h3>Loading Tasks...</h3>}
-        {/* {!loading && tasks.length === 0 && (
-          <h3>No tasks yet. Add your first task.</h3>
-        )} */}
+          <button
+            disabled={loading}
+            onClick={addTask}
+            style={{
+              width: "48%",
+              padding: "10px",
+              marginRight: "4%",
+              background: "#4CAF50",
+              color: "#fff",
+              border: "none",
+              borderRadius: "5px",
+              cursor: "pointer",
+            }}
+          >
+            Add Task
+          </button>
+
+          <button
+            onClick={getTasks}
+            style={{
+              width: "48%",
+              padding: "10px",
+              background: "#2196F3",
+              color: "#fff",
+              border: "none",
+              borderRadius: "5px",
+              cursor: "pointer",
+            }}
+          >
+            Get Tasks
+          </button>
+        </div>
+
+        {/* Logout */}
+        <div style={{ textAlign: "right", marginBottom: "20px" }}>
+          <Link to="/logout">
+            <button
+              onClick={logout}
+              style={{
+                padding: "8px 15px",
+                background: "red",
+                color: "#fff",
+                border: "none",
+                borderRadius: "5px",
+              }}
+            >
+              Logout
+            </button>
+          </Link>
+        </div>
+
+        {/* Task List */}
+        <h3>My Tasks</h3>
+
+        {loading && <p>Loading Tasks...</p>}
 
         {tasks && tasks.length > 0 ? (
           tasks.map((task) => (
@@ -118,23 +195,44 @@ const Dashboard = () => {
               key={task._id}
               style={{
                 border: "1px solid #ccc",
-                padding: "10px",
-                margin: "10px",
+                padding: "15px",
+                marginBottom: "10px",
                 borderRadius: "8px",
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
               }}
             >
-              <p>{task.title}</p>
+              <div>
+                <p>
+                  <strong>{task.title}</strong>
+                </p>
+                <p>Status: {task.status}</p>
+              </div>
 
-              <select
-                value={task.status}
-                onChange={(e) => updateTask(task._id, e.target.value)}
-              >
-                <option value="pending">Pending</option>
-                <option value="completed">Completed</option>
-              </select>
-              <p>Status: {task.status}</p>
+              <div>
+                <select
+                  value={task.status}
+                  onChange={(e) => updateTask(task._id, e.target.value)}
+                  style={{ marginRight: "10px" }}
+                >
+                  <option value="pending">Pending</option>
+                  <option value="completed">Completed</option>
+                </select>
 
-              <button onClick={() => deleteTask(task._id)}>Delete</button>
+                <button
+                  onClick={() => deleteTask(task._id)}
+                  style={{
+                    padding: "5px 10px",
+                    background: "red",
+                    color: "#fff",
+                    border: "none",
+                    borderRadius: "5px",
+                  }}
+                >
+                  Delete
+                </button>
+              </div>
             </div>
           ))
         ) : (
