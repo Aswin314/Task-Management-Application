@@ -10,7 +10,25 @@ import Deadline2 from "../Ai/Deadline.js";
 import { productivityScore } from "../Ai/Productivity.js";
 import { getPriority } from "../Ai/getpriority.js";
 import { getSuggestion } from "../Ai/Suggestionai.js";
-
+import { getWeeklyStats } from "../Ai/analyticsAI.js";
+import { Bar } from "react-chartjs-2";
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend,
+} from "chart.js";
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend,
+);
 const Dashboard = () => {
   const [tasks, setTasks] = useState([]);
   const [title, setTitle] = useState("");
@@ -18,6 +36,7 @@ const Dashboard = () => {
   const [loading, setLoading] = useState(false);
   const [Score, setScore] = useState(0);
   const [suggestion, setSuggestion] = useState("");
+  const [weeklyData, setWeeklyData] = useState(null);
   const { logout } = useContext(AuthContext);
 
   const getTasks = async () => {
@@ -34,6 +53,7 @@ const Dashboard = () => {
       setTasks(res.data);
       setScore(productivityScore(res.data));
       setSuggestion(getSuggestion(res.data, productivityScore(res.data)));
+      setWeeklyData(getWeeklyStats(res.data));
       toast.success("Tasks fetched successfully");
     } catch (err) {
       toast.error(handleError(err));
@@ -222,6 +242,19 @@ const Dashboard = () => {
                   <strong>{task.title}</strong>
                 </p>
                 <p>Status: {task.status}</p>
+                {weeklyData && (
+                  <Bar
+                    data={{
+                      labels: weeklyData.labels,
+                      datasets: [
+                        {
+                          label: "Completed Tasks",
+                          data: weeklyData.data,
+                        },
+                      ],
+                    }}
+                  />
+                )}
               </div>
 
               <div>
