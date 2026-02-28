@@ -19,18 +19,11 @@ export const Register = async (req, res) => {
 export const Login = async (req, res) => {
   const { email, password } = req.body;
 
-  console.log("Email from frontend:", email);
-  console.log("Password from frontend:", password);
-
   const user = await User.findOne({ email });
-
-  console.log("User found:", user);
 
   if (!user) return res.status(400).json("User not found");
 
   const match = await bcrypt.compare(password, user.password);
-
-  console.log("Password match:", match);
 
   if (!match) return res.status(400).json("Wrong Password");
 

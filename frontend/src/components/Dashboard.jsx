@@ -25,7 +25,6 @@ const Dashboard = () => {
       toast.success("Tasks fetched successfully");
     } catch (err) {
       toast.error(handleError(err));
-      console.log(err);
     }
     setLoading(false);
   };
@@ -42,7 +41,7 @@ const Dashboard = () => {
       toast.success("Task added successfully");
     } catch (err) {
       toast.error(handleError(err));
-      console.log(err);
+
     }
     setLoading(false);
   };
@@ -64,7 +63,7 @@ const Dashboard = () => {
       toast.success("Task updated successfully");
     } catch (err) {
       toast.error(handleError(err));
-      console.log(err);
+  
     }
   };
   const deleteTask = async (id) => {

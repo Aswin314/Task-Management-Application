@@ -1,6 +1,7 @@
 import Navbar from "./Navbar";
 import axios from "axios";
 import { useEffect, useState } from "react";
+import { toast } from "react-toastify";
 
 export default function AdminDashboard() {
   const [users, setUsers] = useState([]);
@@ -19,8 +20,9 @@ export default function AdminDashboard() {
         );
 
         setUsers(res.data);
+        toast.success("Users fetched successfully");
       } catch (err) {
-        console.log(err);
+        toast.error("Failed to fetch users");
       }
     };
 
