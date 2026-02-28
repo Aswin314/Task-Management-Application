@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import "./PageDemo.css";
-const PageDemo = () => {
+import "./LandingPage.css";
+const LandingPage = () => {
   return (
     <div className="home-container">
       <div className="home-card">
@@ -22,4 +22,4 @@ const PageDemo = () => {
   );
 };
 
-export default PageDemo;
+export default LandingPage;

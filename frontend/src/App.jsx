@@ -4,13 +4,13 @@ import ProtectedRoute from "./Routes/ProtectedRoute";
 import AdminRoute from "./Routes/AdminRoutes";
 import AdminDashboard from "./components/AdminDashboard";
 import Dashboard from "./components/Dashboard";
-import PageDemo from "./page/PageDemo";
+import LandingPage from "./page/LandingPage";
 
 function App() {
   return (
     <Routes>
       <Route path="/login" element={<Login />}></Route>
-      <Route path="/" element={<PageDemo />}></Route>
+      <Route path="/" element={<LandingPage />}></Route>
 
       {/* USER ACCESS */}
       <Route
