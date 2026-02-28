@@ -36,6 +36,7 @@ export default function Login() {
       });
       login(res.data.token);
       toast.success("Login successful");
+      setForm("");
     } catch (err) {
       toast.error(handleError(err));
     }
